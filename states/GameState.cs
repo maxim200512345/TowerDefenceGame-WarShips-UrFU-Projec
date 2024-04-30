@@ -1,17 +1,18 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TD.Factories;
 using TD.Models;
 
-namespace TD.managers
+namespace TD.states
 {
-    public class GameManager
+    public class GameState : State
     {
         private Map Map;
         private List<Vector2> PotentialTowerList;
@@ -20,11 +21,11 @@ namespace TD.managers
         private List<UnitShip> KilledBoats;
         private ShipFactory shipFactory;
 
-        public GameManager() {
-            
-        
+        public GameState(Game1 game, GraphicsDevice graphicsDevice, ContentManager content) : base(game, graphicsDevice, content)
+        {
+            initialize();
         }
-        public void Initialize()
+        public void initialize()
         {
             Map = new Map("../../../Data/map.csv");
             path = Map.GetPath();
@@ -33,8 +34,29 @@ namespace TD.managers
             PotentialTowerList = Map.GetTowerList();
             KilledBoats = new();
         }
+        public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
+        {
+            Globals.SpriteBatch.Begin();
+            Map.Draw(gameTime);
+            shipFactory.Draw(gameTime);
 
-        public void Update(GameTime gameTime)
+            foreach (var tower in clicked)
+            {
+                Globals.SpriteBatch.Draw(Globals.TextureAtlas, new Rectangle((int)tower.Placement.X * 64, (int)tower.Placement.Y * 64, 64, 64), new Rectangle(256 * 2, 0, 256, 256), Color.White);
+            }
+
+            foreach (var killed in KilledBoats)
+            {
+                Globals.SpriteBatch.Draw(Globals.TextureAtlas, new Rectangle((int)killed.currentCoords.X, (int)killed.currentCoords.Y, 64, 64), new Rectangle(256 * 6, 0, 256, 256), Color.White);
+            }
+            Globals.SpriteBatch.End();
+        }
+
+        public override void PostUpdate(GameTime gameTime)
+        {
+        }
+
+        public override void Update(GameTime gameTime)
         {
             KilledBoats.Clear();
             shipFactory.Update(gameTime);
@@ -68,27 +90,6 @@ namespace TD.managers
                     shipFactory.ShipList.Remove(killed);
                 if (flag) break;
             }
-
-        }
-        public void Draw(GameTime gameTime)
-        {
-            Globals.SpriteBatch.Begin();
-            Map.Draw(gameTime);
-            shipFactory.Draw(gameTime);
-
-            ////////////////////прорисовка купленных башен
-            foreach (var tower in clicked)
-            {
-                Globals.SpriteBatch.Draw(Globals.TextureAtlas, new Rectangle((int)tower.Placement.X * 64, (int)tower.Placement.Y * 64, 64, 64), new Rectangle(256 * 2, 0, 256, 256), Color.White);
-            }
-            /*foreach (var killed in shipList)
-                Globals.SpriteBatch.Draw(textureAtlas, new Rectangle((int)killed.currentCoords.X * 64, (int)killed.currentCoords.Y * 64, 64, 64), new Rectangle(256 * 6, 0, 256, 256), Color.White);
-    */
-            foreach (var killed in KilledBoats)
-            {
-                Globals.SpriteBatch.Draw(Globals.TextureAtlas, new Rectangle((int)killed.currentCoords.X, (int)killed.currentCoords.Y, 64, 64), new Rectangle(256 * 6, 0, 256, 256), Color.White);
-            }
-            Globals.SpriteBatch.End();
         }
     }
 }
