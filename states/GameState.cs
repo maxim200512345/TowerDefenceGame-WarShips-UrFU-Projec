@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -20,6 +21,9 @@ namespace TD.states
         private List<BuildedTower> clicked;
         private List<UnitShip> KilledBoats;
         private ShipFactory shipFactory;
+        private SoundEffect soundEffectBuild;
+        private SoundEffect soundEffectBoom;
+        private int points = 15;
 
         public GameState(Game1 game, GraphicsDevice graphicsDevice, ContentManager content) : base(game, graphicsDevice, content)
         {
@@ -33,6 +37,9 @@ namespace TD.states
             clicked = new();
             PotentialTowerList = Map.GetTowerList();
             KilledBoats = new();
+            soundEffectBuild = Globals.Content.Load<SoundEffect>("build");
+            
+            soundEffectBoom = Globals.Content.Load<SoundEffect>("boom");
         }
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
@@ -55,7 +62,11 @@ namespace TD.states
         public override void PostUpdate(GameTime gameTime)
         {
         }
-
+        public  string GetStatus()
+        {
+            if (shipFactory.ShipList.Count == 0) return "win";
+            return "loose";
+        }
         public override void Update(GameTime gameTime)
         {
             KilledBoats.Clear();
@@ -68,7 +79,13 @@ namespace TD.states
             {
                 if (PotentialTowerList.Contains(new Vector2(convertedCoords.X, convertedCoords.Y)))
                 {
-                    clicked.Add(new BuildedTower(new Vector2(convertedCoords.X, convertedCoords.Y)));
+                    if (points > 10)
+                    {
+                        soundEffectBuild.Play();
+                        clicked.Add(new BuildedTower(new Vector2(convertedCoords.X, convertedCoords.Y)));
+                        points -= 10;
+                    }
+                    
                 }
             }
             foreach (var tower in clicked)
@@ -80,8 +97,10 @@ namespace TD.states
                     if ((ship.currentCoords.X - positionInPixels.X) * (ship.currentCoords.X - positionInPixels.X) + (ship.currentCoords.Y - positionInPixels.Y) * (ship.currentCoords.Y - positionInPixels.Y) <= BuildedTower.ShootRadius * BuildedTower.ShootRadius)
                         if (ship.IsDrawned())
                         {
+                            soundEffectBoom.Play();
                             KilledBoats.Add(ship);
                             flag = true;
+                            points += 5;
                             break;
                         }
                 }

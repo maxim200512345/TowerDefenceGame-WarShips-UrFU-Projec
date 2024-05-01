@@ -1,6 +1,9 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Media;
+using System;
 using TD.managers;
 using TD.states;
 
@@ -12,6 +15,7 @@ namespace TD
         private State _currentState;
         private State _nextState;
 
+        private Song backgroundMusic;
 
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
@@ -40,8 +44,17 @@ namespace TD
             Globals.TextureAtlas = textureAtlas;
 
             _currentState = new MenuState(this, _graphics.GraphicsDevice, Content);
-
+            backgroundMusic = Content.Load<Song>("back");
+            MediaPlayer.Play(backgroundMusic);
+            MediaPlayer.IsRepeating = true;
+            MediaPlayer.MediaStateChanged += MediaPlayer_MediaStateChanged;
         }
+
+        private void MediaPlayer_MediaStateChanged(object sender, EventArgs e)
+        {
+            MediaPlayer.Volume -= 0.1f;
+        }
+
         protected override void Update(GameTime gameTime)
         {
             
@@ -53,8 +66,8 @@ namespace TD
                 _currentState = _nextState;
                 _nextState = null;
             }
+            
             _currentState.Update(gameTime);
-            /*gameManager.Update(gameTime);*/
             _currentState.PostUpdate(gameTime);
             base.Update(gameTime);
         }
@@ -62,7 +75,6 @@ namespace TD
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
-            /*gameManager.Draw(gameTime);*/
             _currentState.Draw(gameTime, _spriteBatch);
             base.Draw(gameTime);
         }

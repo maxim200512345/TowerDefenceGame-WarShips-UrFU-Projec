@@ -46,6 +46,7 @@ namespace TD.Models
         {
             var newCoords = new Vector2(currentCoords.X + 0.5f, currentCoords.Y);
             currentCoords = newCoords;
+
         }
     }
 }
