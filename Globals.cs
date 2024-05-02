@@ -30,5 +30,10 @@ namespace TD
                 new Rectangle(256, 0, 256, 256),
                 new Rectangle(256 * 1, 0, 256, 256)
             };
+        public static float Time { get; set; }
+        public static void Update(GameTime gt)
+        {
+            Time = (float)gt.ElapsedGameTime.TotalSeconds;
+        }
     }
 }

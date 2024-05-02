@@ -48,6 +48,7 @@ namespace TD
             MediaPlayer.Play(backgroundMusic);
             MediaPlayer.IsRepeating = true;
             MediaPlayer.MediaStateChanged += MediaPlayer_MediaStateChanged;
+            
         }
 
         private void MediaPlayer_MediaStateChanged(object sender, EventArgs e)
@@ -57,8 +58,6 @@ namespace TD
 
         protected override void Update(GameTime gameTime)
         {
-            
-
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
             if (_nextState != null)
@@ -66,7 +65,7 @@ namespace TD
                 _currentState = _nextState;
                 _nextState = null;
             }
-            
+            Globals.Update(gameTime);
             _currentState.Update(gameTime);
             _currentState.PostUpdate(gameTime);
             base.Update(gameTime);
