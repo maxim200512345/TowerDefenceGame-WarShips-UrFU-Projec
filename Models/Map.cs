@@ -49,12 +49,14 @@ namespace TD.Models
 
         public List<Vector2> GetPath()
         {
-            var path = new List<Vector2>();
-            foreach (var item in TileMap)
-                if (item.Value == 2)
-                    path.Add(item.Key);
+            List<Vector2> path = new List<Vector2>();
+            for (int x = 0; x < 6; x++)
+                path.Add(new Vector2(x, 6));
+            for (int y = 6; y > 0; y--)
+                path.Add(new Vector2(6, y));
+            for (int x = 6; x < 13; x++)
+                path.Add(new Vector2(x, 1));
             return path;
-
         }
         public List<Vector2> GetTowerList()
         {

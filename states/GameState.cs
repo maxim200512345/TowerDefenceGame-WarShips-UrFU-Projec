@@ -24,7 +24,7 @@ namespace TD.states
         private SoundEffect soundEffectBuild;
         private SoundEffect soundEffectBoom;
         private int points = 15;
-
+        private SpriteFont ScoreBlock;
         public GameState(Game1 game, GraphicsDevice graphicsDevice, ContentManager content) : base(game, graphicsDevice, content)
         {
             initialize();
@@ -38,12 +38,13 @@ namespace TD.states
             PotentialTowerList = Map.GetTowerList();
             KilledBoats = new();
             soundEffectBuild = Globals.Content.Load<SoundEffect>("build");
-            
+            ScoreBlock = Globals.Content.Load<SpriteFont>("score");
             soundEffectBoom = Globals.Content.Load<SoundEffect>("boom");
         }
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             Globals.SpriteBatch.Begin();
+            
             Map.Draw(gameTime);
             shipFactory.Draw(gameTime);
 
@@ -56,6 +57,8 @@ namespace TD.states
             {
                 Globals.SpriteBatch.Draw(Globals.TextureAtlas, new Rectangle((int)killed.currentCoords.X, (int)killed.currentCoords.Y, 64, 64), new Rectangle(256 * 6, 0, 256, 256), Color.White);
             }
+            var text = $"score : {points}";
+            Globals.SpriteBatch.DrawString(ScoreBlock, text, new Vector2(0, 0), Color.Black);
             Globals.SpriteBatch.End();
         }
 
@@ -71,7 +74,6 @@ namespace TD.states
         {
             KilledBoats.Clear();
             shipFactory.Update(gameTime);
-
             var xCoord = Mouse.GetState().X;
             var yCoord = Mouse.GetState().Y;
             var convertedCoords = Globals.TranslateCoordsToTile(xCoord, yCoord);

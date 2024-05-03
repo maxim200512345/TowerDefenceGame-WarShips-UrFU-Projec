@@ -28,7 +28,7 @@ namespace TD.Factories
             var coords = Globals.TranslateTileToCoords(startedPoint.Item1, startedPoint.Item2);
             for (int dy = 0, dx = 64/amount; dy <  32 && dx < 64; dy += 10, dx += 10)
             {
-                result.Add(new UnitShip(5f, path, new Vector2(coords.X += dx, coords.Y += dy)));
+                result.Add(new UnitShip(1f, path, new Vector2(coords.X += dx, coords.Y += dy)));
             }
             return result;
         }
