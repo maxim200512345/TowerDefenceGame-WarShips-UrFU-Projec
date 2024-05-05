@@ -73,10 +73,11 @@ namespace TD.Models
                 index += 1;
                 DestinationPosition = Path[index];
             }
+            iterations++;
         }
         private bool isTimeToChange()
         {
-           return (Globals.Time >= 0.5);
+           return iterations%100==0;
         }
         private bool NearDestination()
         {
