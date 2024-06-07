@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework.Input;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,13 +11,17 @@ namespace TD.managers
 {
     internal class InputManager
     {
-        private MouseState mouseState;
 
         public InputManager() {
-            mouseState = Mouse.GetState();
         }
         public bool Clicked { get; }
-
-        public bool IsClicked => mouseState.LeftButton == ButtonState.Pressed;
+        public static Vector2 GetTileCoords()
+        {
+            var xCoord = Mouse.GetState().X;
+            var yCoord = Mouse.GetState().Y;
+            var convertedCoords = Globals.TranslateCoordsToTile(xCoord, yCoord);
+            return convertedCoords;
+        }
+        public static bool IsClicked => Mouse.GetState().LeftButton == ButtonState.Pressed;
     }
 }

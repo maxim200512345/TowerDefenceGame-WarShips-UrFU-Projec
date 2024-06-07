@@ -1,9 +1,9 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 using System;
+using System.Windows.Forms;
 using TD.managers;
 using TD.states;
 
@@ -20,7 +20,6 @@ namespace TD
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
         private Texture2D textureAtlas;   
-        private InputManager inputManager;
         
         public Game1()
         {
@@ -58,8 +57,15 @@ namespace TD
 
         protected override void Update(GameTime gameTime)
         {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-                Exit();
+            if (_currentState is GameState)
+            {
+                var gameState = _currentState as GameState;
+                if (gameState.GameIsWin())
+                    MessageBox.Show("Поздравляем! Вы победили!", "Победа");
+                if (gameState.GameIsLost())
+                    MessageBox.Show("К сожалению, вы проиграли.", "Поражение");
+            }
+
             if (_nextState != null)
             {
                 _currentState = _nextState;

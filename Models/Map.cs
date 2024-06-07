@@ -1,15 +1,10 @@
 ﻿using Microsoft.Xna.Framework;
-using SharpDX.Direct3D9;
-using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace TD.Models
 {
-    class Map
+    public class Map
     {
         Dictionary<Vector2, int> TileMap;
         List<Rectangle> TextureStore;
@@ -47,17 +42,7 @@ namespace TD.Models
             return result;
         }
 
-        public List<Vector2> GetPath()
-        {
-            List<Vector2> path = new List<Vector2>();
-            for (int x = 0; x < 6; x++)
-                path.Add(new Vector2(x, 6));
-            for (int y = 6; y > 0; y--)
-                path.Add(new Vector2(6, y));
-            for (int x = 6; x < 13; x++)
-                path.Add(new Vector2(x, 1));
-            return path;
-        }
+        
         public List<Vector2> GetTowerList()
         {
             var result = new List<Vector2>();
@@ -67,7 +52,7 @@ namespace TD.Models
             return result;
         }
 
-        public void Draw(GameTime gameTime)
+        public void Draw()
         {
             foreach (var item in TileMap)
             {
